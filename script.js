@@ -1,12 +1,24 @@
-//You can edit ALL of the code here
-function setup() {
-  const allEpisodes = getAllEpisodes();
-  makePageForEpisodes(allEpisodes);
-}
+window.onload = () => {
+  const containerEpisodes = document.querySelector(".container-episodes");
+  const episodes = getAllEpisodes();
 
-function makePageForEpisodes(episodeList) {
-  const rootElem = document.getElementById("root");
-  rootElem.textContent = `Got ${episodeList.length} episode(s)`;
-}
+  for (let episode of episodes) {
+    const article = document.createElement("article");
 
-window.onload = setup;
+    const epTitleCont = document.createElement("div");
+    epTitleCont.setAttribute("class", "cont-ep-title");
+    const epTitle = document.createElement("h2");
+    epTitle.innerText = `${episode.name}`;
+    epTitleCont.appendChild(epTitle);
+
+    const epImg = document.createElement("img");
+    epImg.setAttribute("class", "ep-img");
+    epImg.setAttribute("src", episode.image.medium);
+
+    article.appendChild(epTitleCont);
+    article.appendChild(epImg);
+    article.insertAdjacentHTML("beforeend", episode.summary);
+
+    containerEpisodes.appendChild(article);
+  }
+}
