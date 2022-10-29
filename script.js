@@ -8,7 +8,7 @@ window.onload = () => {
     const epTitleCont = document.createElement("div");
     epTitleCont.setAttribute("class", "cont-ep-title");
     const epTitle = document.createElement("h2");
-    epTitle.innerText = `${episode.name}`;
+    epTitle.innerText = `${episode.name} - S${zeroPad(episode.season)}E${zeroPad(episode.number)}`;
     epTitleCont.appendChild(epTitle);
 
     const epImg = document.createElement("img");
@@ -21,4 +21,8 @@ window.onload = () => {
 
     containerEpisodes.appendChild(article);
   }
+}
+
+function zeroPad(num) {
+  return num < 10 ? `0${num}` : num;
 }
