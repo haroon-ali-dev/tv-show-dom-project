@@ -4,6 +4,7 @@ window.onload = () => {
   eps = getAllEpisodes();
 
   displayEps(eps);
+  populateEpSelect(eps);
 }
 
 function displayEps(eps) {
@@ -32,11 +33,40 @@ function displayEps(eps) {
   }
 }
 
+function populateEpSelect(eps) {
+  const selectEp = document.querySelector("#selectEp");
+
+  for (let ep of eps) {
+    const option = document.createElement("option");
+    option.setAttribute("value", ep.id);
+    option.innerText = `S${zeroPad(ep.season)}E${zeroPad(ep.number)} - ${ep.name}`;
+
+    selectEp.appendChild(option);
+  }
+}
+
+document.querySelector("#selectEp").addEventListener("change", (e) => {
+  const value = e.target.value;
+
+  document.querySelector("#search").value = "";
+  document.querySelector("#search-text").innerHTML = "";
+
+  if (value === "All Episodes") {
+    displayEps(eps);
+  } else {
+    const epsFiltered = eps.filter(ep => ep.id === +value);
+
+    displayEps(epsFiltered);
+  }
+});
+
 document.querySelector("#search").addEventListener("keyup", (e) => {
   const query = e.target.value;
   const searchText = document.querySelector("#search-text");
 
-  epsFiltered = eps.filter(ep => ep.name.toLowerCase().includes(query.toLowerCase()) || ep.summary.toLowerCase().includes(query.toLowerCase()));
+  document.querySelector("#selectEp").value = "All Episodes";
+
+  const epsFiltered = eps.filter(ep => ep.name.toLowerCase().includes(query.toLowerCase()) || ep.summary.toLowerCase().includes(query.toLowerCase()));
 
   if (query) {
     searchText.innerText = `Displaying ${epsFiltered.length}/${eps.length} episodes.`;
