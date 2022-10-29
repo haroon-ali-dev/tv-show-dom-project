@@ -14,8 +14,16 @@
 </head>
 
 <body>
+  <header>
+    <nav>
+      <input id="search" type="text" placeholder="Search For Episode">
+      <span id="search-text"></span>
+    </nav>
+  </header>
   <div class="container-tvmaze">Data has come from <a href="https://tvmaze.com/" target="_blank">TV Maze</a></div>
-  <div class="container-episodes"></div>
+  <section>
+    <div class="container-eps"></div>
+  </section>
 
   <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
   <script src="episodes.js"></script>
