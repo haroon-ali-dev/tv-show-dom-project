@@ -1,7 +1,8 @@
 let eps;
 
-window.onload = () => {
-  eps = getAllEpisodes();
+window.onload = async () => {
+  const res = await fetch("https://api.tvmaze.com/shows/82/episodes");
+  eps = await res.json();
 
   displayEps(eps);
   populateEpSelect(eps);
