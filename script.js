@@ -1,11 +1,61 @@
 let eps;
 
 window.onload = async () => {
-  const res = await fetch("https://api.tvmaze.com/shows/82/episodes");
+  populateSelectShows();
+
+  eps = await getEps(document.querySelectorAll("#selectShow")[0].value);
+
+  populateEpSelect(eps);
+  displayEps(eps);
+}
+
+function populateSelectShows() {
+  const selectShow = document.querySelector("#selectShow");
+  const shows = getAllShows().sort((a, b) => {
+    let fa = a.name.toLowerCase(),
+      fb = b.name.toLowerCase();
+
+    if (fa < fb) {
+      return -1;
+    }
+    if (fa > fb) {
+      return 1;
+    }
+    return 0;
+  });
+
+  for (let show of shows) {
+    const option = document.createElement("option");
+    option.setAttribute("value", show.id);
+    option.innerText = `${show.name}`;
+
+    selectShow.appendChild(option);
+  }
+}
+
+async function getEps(showId) {
+  const res = await fetch(`https://api.tvmaze.com/shows/${showId}/episodes`);
   eps = await res.json();
 
-  displayEps(eps);
-  populateEpSelect(eps);
+  return eps;
+}
+
+function populateEpSelect(eps) {
+  const selectEp = document.querySelector("#selectEp");
+  selectEp.innerHTML = "";
+
+  const firstOption = document.createElement("option");
+  firstOption.setAttribute("value", "All Episodes");
+  firstOption.innerText = "All Episodes";
+  selectEp.appendChild(firstOption);
+
+  for (let ep of eps) {
+    const option = document.createElement("option");
+    option.setAttribute("value", ep.id);
+    option.innerText = `S${zeroPad(ep.season)}E${zeroPad(ep.number)} - ${ep.name}`;
+
+    selectEp.appendChild(option);
+  }
 }
 
 function displayEps(eps) {
@@ -34,17 +84,12 @@ function displayEps(eps) {
   }
 }
 
-function populateEpSelect(eps) {
-  const selectEp = document.querySelector("#selectEp");
+document.querySelector("#selectShow").addEventListener("change", async (e) => {
+  eps = await getEps(e.target.value);
 
-  for (let ep of eps) {
-    const option = document.createElement("option");
-    option.setAttribute("value", ep.id);
-    option.innerText = `S${zeroPad(ep.season)}E${zeroPad(ep.number)} - ${ep.name}`;
-
-    selectEp.appendChild(option);
-  }
-}
+  populateEpSelect(eps);
+  displayEps(eps);
+});
 
 document.querySelector("#selectEp").addEventListener("change", (e) => {
   const value = e.target.value;
